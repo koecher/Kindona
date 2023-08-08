@@ -16,7 +16,8 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  static const String mapsrc = 'assets/maps/campus_e.map';
+  // static const String mapsrc = 'assets/maps/campus_e.map';
+  static const String mapsrc = 'assets/maps/lsbg.map';
 
   const MyApp({super.key});
 
