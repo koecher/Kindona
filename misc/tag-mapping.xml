@@ -164,7 +164,7 @@
         <osm-tag key="indoor" value="corridor" zoom-appear="18" label-position="true" />
         <osm-tag key="indoor" value="level" zoom-appear="18"/>
         <osm-tag key="indoor" value="beacon" zoom-appear="18"/>
-        <osm-tag key="indoor" value="beacon" zoom-appear="18"/>
+        <!-- <osm-tag key="indoor" value="beacon" zoom-appear="18"/> -->
         <osm-tag key="indoor" value="path" zoom-appear="18"/>
         <osm-tag key="id" value="%s" zoom-appear="18"/>
     </ways>
