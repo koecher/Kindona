@@ -16,6 +16,7 @@ import 'package:mapsforge_flutter/core.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:epitaph_ips/epitaph_ips/positioning_system/beacon.dart' as epi;
 import 'package:ml_linalg/linalg.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class BleService {
   static final BehaviorSubject<Pos> positionStream = BehaviorSubject();
@@ -47,11 +48,12 @@ class BleService {
 
   // Set the proximityUUID to the uuid of your iBeacons to prefilter
   // the discovered ble devices
-  //final Region region = Region(identifier: 'changememaybe' /*,proximityUUID: 'considerchangingme'*/);
   final Region region = Region(
+      identifier: 'changememaybe' /*,proximityUUID: 'considerchangingme'*/);
+  /*final Region region = Region(
       identifier: 'Apple Airlocate',
       proximityUUID: '626C756B-6969-2E63-6F6D-626561636F6E');
-
+*/
   BleService({this.onLocationServicesDisabled, this.onBluetoothDisabled}) {
     //Initialize calculator
     _lma = LMA();
@@ -98,6 +100,9 @@ class BleService {
       onBluetoothDisabled?.call();
       return;
     }
+
+    // Needed since Android 12 to get the Nearby Devices PopUp
+    await Permission.bluetoothScan.request();
 
     await Future.wait([
       flutterBeacon.initializeAndCheckScanning,
