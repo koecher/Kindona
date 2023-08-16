@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:indoor_navigation/services/ble_service.dart';
-import 'package:indoor_navigation/services/gps_service.dart';
+//import 'package:indoor_navigation/services/gps_service.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -11,7 +11,7 @@ class PositionService {
 
   static Stream<Pos> get observe => inject.stream;
 
-  final GpsService gpsService = GpsService();
+  //final GpsService gpsService = GpsService();
   final BleService bleService = BleService();
 
   Timer _t = Timer(const Duration(seconds: 0), () {});
@@ -30,21 +30,21 @@ class PositionService {
   PositionService() {
     if (!kIsWeb) {
       bleService.setBeacons(beaconSource);
-      GpsService.observe.listen(_newGpsPositon);
+      //GpsService.observe.listen(_newGpsPositon);
       BleService.observe.listen(_newBlePosition);
     }
   }
 
   void startPositioning() {
     if (!kIsWeb) {
-      gpsService.startPositioning();
+      //gpsService.startPositioning();
       bleService.startPositioning();
     }
   }
 
   void stopPositioning() {
     if (!kIsWeb) {
-      gpsService.stopPositioning();
+      //gpsService.stopPositioning();
       bleService.stopPositioning();
     }
   }
