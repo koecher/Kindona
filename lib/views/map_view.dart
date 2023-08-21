@@ -19,8 +19,8 @@ class MapView extends StatefulWidget {
   @override
   State<MapView> createState() => _MapViewState();
 }
-class _MapViewState extends State<MapView> {
 
+class _MapViewState extends State<MapView> {
   PositionService? gps;
   Pos? _pos;
   late StreamSubscription sub;
@@ -30,9 +30,7 @@ class _MapViewState extends State<MapView> {
   @override
   Widget build(BuildContext context) {
     if (!kIsWeb && gps == null) {
-      gps = MapContext
-          .of(context)
-          .positionService;
+      gps = MapContext.of(context).positionService;
       gps!.startPositioning();
     }
 
@@ -40,18 +38,18 @@ class _MapViewState extends State<MapView> {
 
     var viewModel = MapContext.of(context).viewModel;
 
-    LatLong startPos = mapFile.startPosition?? _mapCenter();
+    LatLong startPos = mapFile.startPosition ?? _mapCenter();
     viewModel.setMapViewPosition(startPos.latitude, startPos.longitude);
 
     viewModel.addOverlay(MapControlOverlay(
         viewModel: viewModel,
         indoorLevels: MapContext.of(context).levels,
         onPressed: _setViewModelLocationToPosition,
-        position: PositionService.observe
-    ));
+        position: PositionService.observe));
     viewModel.addOverlay(DistanceOverlay(viewModel));
 
-    return FlutterMapView(mapModel: _createMapModel(context), viewModel: viewModel);
+    return FlutterMapView(
+        mapModel: _createMapModel(context), viewModel: viewModel);
   }
 
   @override
@@ -88,35 +86,36 @@ class _MapViewState extends State<MapView> {
       var path = navigate(MapContext.of(context).indoorMap, from, to).toList();
 
       if (from.id == 'outside') {
-        path[0] = IndoorNode("ypf", latLong: PositionService.inject.value, level: 0);
+        path[0] =
+            IndoorNode("ypf", latLong: PositionService.inject.value, level: 0);
       }
 
       if (to.id == 'outside') {
-        path[path.length-1] = IndoorNode("ypt", latLong: PositionService.inject.value, level: 0);
+        path[path.length - 1] =
+            IndoorNode("ypt", latLong: PositionService.inject.value, level: 0);
       }
 
-      markerStore.addMarker(
-          fromPath(MapContext.of(context).displayModel, path)
-            ..item = "wayMarker"
-      );
+      markerStore.addMarker(fromPath(MapContext.of(context).displayModel, path)
+        ..item = "wayMarker");
     }
   }
 
   IndoorNode retrieveYourPosition() {
-
     var position = PositionService.inject.value;
 
     // Ignores level of position, how am I supposed to know that, huh?
     var maybeRoom = MapContext.of(context)
-        .indoorMap.graph.keys.whereType<IndoorWay>()
+        .indoorMap
+        .graph
+        .keys
+        .whereType<IndoorWay>()
         .where((element) => containsPoint(element.way, position));
 
     IndoorNode room;
     if (maybeRoom.isNotEmpty) {
       room = maybeRoom.first;
     } else {
-      room = MapContext.of(context)
-          .indoorMap.outside;
+      room = MapContext.of(context).indoorMap.outside;
     }
 
     return room;
@@ -134,8 +133,9 @@ class _MapViewState extends State<MapView> {
       symbolCache: MapContext.of(context).symbolCache,
     );
 
-    mapModel.markerDataStores
-        .add(UserPositionMarker(displayModel: mapModel.displayModel, symbolCache: mapModel.symbolCache!));
+    mapModel.markerDataStores.add(UserPositionMarker(
+        displayModel: mapModel.displayModel,
+        symbolCache: mapModel.symbolCache!));
 
     mapModel.markerDataStores.add(markerStore);
 
@@ -160,15 +160,15 @@ class _MapViewState extends State<MapView> {
     tapListener ??= viewModel.observeTap.listen((event) {
       final coords = LatLong(event.latitude, event.longitude);
       try {
-        var hitRoom = MapContext.of(context).rooms.where((room) =>
-            room.level == viewModel.getIndoorLevel())
+        var hitRoom = MapContext.of(context)
+            .rooms
+            .where((room) => room.level == viewModel.getIndoorLevel())
             .firstWhere((room) => containsPoint(room.way, coords));
         MapContext.of(context).roomStream.value = hitRoom;
       } on StateError {
         //
       }
-    }
-    );
+    });
     roomListener ??= MapContext.of(context).observeSelectedRoom.listen((room) {
       if (room != null) {
         for (var shape in room.way.latLongs) {
@@ -179,7 +179,9 @@ class _MapViewState extends State<MapView> {
           for (var coord in shape) {
             marker.addLatLong(coord);
           }
-          marker.initResources(MapContext.of(context).symbolCache).then((value) => markerStore.addMarker(marker));
+          marker
+              .initResources(MapContext.of(context).symbolCache)
+              .then((value) => markerStore.addMarker(marker));
         }
       }
     });
@@ -189,12 +191,16 @@ class _MapViewState extends State<MapView> {
     var map = MapContext.of(context).map;
     return LatLong(
         (map.boundingBox!.minLatitude + map.boundingBox!.maxLatitude) / 2,
-        (MapContext.of(context).map.boundingBox!.minLongitude + map.boundingBox!.maxLongitude) / 2);
+        (MapContext.of(context).map.boundingBox!.minLongitude +
+                map.boundingBox!.maxLongitude) /
+            2);
   }
 
   _setViewModelLocationToPosition() {
     var viewModel = MapContext.of(context).viewModel;
-    if (_pos != null) {
+    //we got an error when pressing the button too early. This Error was caused by _pos!.lat and _pos!.lon beeing NaN
+    //Error seems to be fixed by this longer statement
+    if (_pos != null && !_pos!.lat.isNaN && !_pos!.lon.isNaN) {
       viewModel.setMapViewPosition(_pos!.lat, _pos!.lon);
     }
   }

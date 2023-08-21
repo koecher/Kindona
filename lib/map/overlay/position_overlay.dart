@@ -8,7 +8,9 @@ class PositionOverlay extends StatefulWidget {
   final void Function() onPressed;
   final Stream<Pos?> position;
 
-  const PositionOverlay({Key? key, required this.onPressed, required this.position}) : super(key: key);
+  const PositionOverlay(
+      {Key? key, required this.onPressed, required this.position})
+      : super(key: key);
 
   @override
   State<StatefulWidget> createState() {
@@ -17,7 +19,6 @@ class PositionOverlay extends StatefulWidget {
 }
 
 class _PositionOverlayState extends State<PositionOverlay> {
-
   late StreamSubscription sub;
   bool positioned = false;
 
@@ -43,9 +44,11 @@ class _PositionOverlayState extends State<PositionOverlay> {
   Widget build(BuildContext context) {
     Widget icon;
     if (positioned) {
-      icon = Icon(Icons.my_location_sharp, color: Theme.of(context).buttonTheme.colorScheme!.primary);
+      icon = Icon(Icons.my_location_sharp,
+          color: Theme.of(context).buttonTheme.colorScheme!.primary);
     } else {
-      icon = Icon(Icons.location_searching_sharp, color:  Theme.of(context).disabledColor);
+      icon = Icon(Icons.location_searching_sharp,
+          color: Theme.of(context).disabledColor);
     }
     return RawMaterialButton(
       onPressed: widget.onPressed,

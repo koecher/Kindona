@@ -21,12 +21,12 @@ class UserPositionMarker extends MarkerByItemDataStore {
 
   late StreamSubscription sub;
 
-  UserPositionMarker({
-    required this.symbolCache,
-    required this.displayModel,
-    this.position
-  }) {
-    sub = PositionService.observe.listen((pos) { position = pos; setRepaint(); });
+  UserPositionMarker(
+      {required this.symbolCache, required this.displayModel, this.position}) {
+    sub = PositionService.observe.listen((pos) {
+      position = pos;
+      setRepaint();
+    });
   }
 
   @override
