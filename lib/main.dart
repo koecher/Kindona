@@ -25,12 +25,16 @@ class MyApp extends StatelessWidget {
     MapFile map;
     if (kIsWeb) {
       map = await MapFile.using(
-          (await DefaultAssetBundle.of(ctx).load("assets/$mapsrc")).buffer.asUint8List(),
-          null, null);
+          (await DefaultAssetBundle.of(ctx).load("assets/$mapsrc"))
+              .buffer
+              .asUint8List(),
+          null,
+          null);
     } else {
       map = await MapFile.using(
           (await DefaultAssetBundle.of(ctx).load(mapsrc)).buffer.asUint8List(),
-          null, null);
+          null,
+          null);
     }
     var indoorMap = await readEnvironment(map);
     var beacons = await BeaconExtractor.extractBeacons(map);
@@ -51,16 +55,16 @@ class MyApp extends StatelessWidget {
 
     // Create the Renderer
     final jobRenderer =
-    MapDataStoreRenderer(map, renderTheme, symbolCache, true);
+        MapDataStoreRenderer(map, renderTheme, symbolCache, true);
 
     var bitmapCache =
-    await FileTileBitmapCache.create(jobRenderer.getRenderKey());
+        await FileTileBitmapCache.create(jobRenderer.getRenderKey());
     bitmapCache.purgeAll();
 
     var viewModel = ViewModel(
         displayModel: displayModel,
         contextMenuBuilder: null // Remove default ContextMenuBuilder
-    );
+        );
 
     viewModel.setZoomLevel(19);
 
@@ -83,18 +87,17 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return
-      MaterialApp(
-          title: 'Kindona Demo',
-          theme: ThemeData(colorScheme: const ColorScheme.light()),
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
-          supportedLocales: AppLocalizations.supportedLocales,
-          home: FutureBuilder(
-              future: _initialize(context, const HomeView()),
-              builder: (context, snapshot) =>
-              snapshot.connectionState != ConnectionState.done ? const LoadingView()
-                  : snapshot.requireData
-          ),
-      );
+    return MaterialApp(
+      title: 'Kindona Demo',
+      theme: ThemeData(colorScheme: const ColorScheme.light()),
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
+      home: FutureBuilder(
+          future: _initialize(context, const HomeView()),
+          builder: (context, snapshot) =>
+              snapshot.connectionState != ConnectionState.done
+                  ? const LoadingView()
+                  : snapshot.requireData),
+    );
   }
 }

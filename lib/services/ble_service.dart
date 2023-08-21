@@ -106,7 +106,7 @@ class BleService {
 
     await Future.wait([
       flutterBeacon.initializeAndCheckScanning,
-      flutterBeacon.setScanPeriod(1000),
+      flutterBeacon.setScanPeriod(2100),
       flutterBeacon.setBetweenScanPeriod(150)
     ]);
 
